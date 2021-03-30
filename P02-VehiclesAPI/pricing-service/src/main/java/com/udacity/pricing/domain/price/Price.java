@@ -24,6 +24,13 @@ public class Price {
     }
 
     public Price(Long id, String currency, BigDecimal price, Long vehicleId) {
+        this.id = id;
+        this.currency = currency;
+        this.price = price;
+        this.vehicleId = vehicleId;
+    }
+
+    public Price(String currency, BigDecimal price, Long vehicleId) {
         this.currency = currency;
         this.price = price;
         this.vehicleId = vehicleId;

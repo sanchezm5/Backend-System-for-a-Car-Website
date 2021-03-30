@@ -26,7 +26,7 @@ public class PricingServiceIntegrationTest {
     @Test
     public void testGetAllPrices() {
         ResponseEntity<String> response =
-                this.testRestTemplate.getForEntity("http://localhost:" + port + "/prices/", String.class);
+                this.testRestTemplate.getForEntity("http://localhost:" + port + "/prices", String.class);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
     }
