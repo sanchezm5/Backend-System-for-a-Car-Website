@@ -52,29 +52,31 @@ public class CarService {
          *   If it does not exist, throw a CarNotFoundException
          *   Remove the below code as part of your implementation.
          */
-        Car car = new Car();
+        Car car;
         Optional<Car> optionalCar = repository.findById(id);
+
         /**
          * TODO: Use the Pricing Web client you create in `VehiclesApiApplication`
          *   to get the price based on the `id` input'
          * TODO: Set the price of the car
          * Note: The car class file uses @transient, meaning you will need to call
          *   the pricing service each time to get the price.
-         */
-        if (optionalCar.isPresent()) {
-            car = optionalCar.get();
-            car.setPrice(priceClient.getPrice(id));
-        } else {
-            throw new CarNotFoundException();
-        }
-        /**
+         *
          * TODO: Use the Maps Web client you create in `VehiclesApiApplication`
          *   to get the address for the vehicle. You should access the location
          *   from the car object and feed it to the Maps service.
          * TODO: Set the location of the vehicle, including the address information
          * Note: The Location class file also uses @transient for the address,
-         * meaning the Maps service needs to be called each time for the address.
+         *   meaning the Maps service needs to be called each time for the address.
          */
+
+        if (optionalCar.isPresent()) {
+            car = optionalCar.get();
+            car.setPrice(priceClient.getPrice(id));
+            car.setLocation(mapsClient.getAddress(car.getLocation()));
+        } else {
+            throw new CarNotFoundException();
+        }
 
         return car;
     }
@@ -90,8 +92,8 @@ public class CarService {
                     .map(carToBeUpdated -> {
                         carToBeUpdated.setCondition(car.getCondition());
                         carToBeUpdated.setDetails(car.getDetails());
-                        carToBeUpdated.setLocation(car.getLocation());
-                        carToBeUpdated.setPrice(car.getPrice());
+                        carToBeUpdated.setLocation(mapsClient.getAddress(car.getLocation()));
+                        carToBeUpdated.setPrice(priceClient.getPrice(car.getId()));
                         return repository.save(carToBeUpdated);
                     }).orElseThrow(CarNotFoundException::new);
         }
